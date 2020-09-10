@@ -1,5 +1,6 @@
 from django.contrib import admin
 from . import models
+from django.utils.html import mark_safe
 
 
 @admin.register(models.RoomType, models.Amenity, models.Facility, models.HouseRule)
@@ -12,16 +13,22 @@ class ItemAdmin(admin.ModelAdmin):
     def used_by(self, obj):
         return obj.rooms.count()
 
+# RoomAdmin 안에 PhotoAdmin을 넣기 위한 코드
+class PhotoInline(admin.StackedInline):
+    model = models.Photo
+
 
 @admin.register(models.Room)
 class RoomAdmin(admin.ModelAdmin):
 
     """ Room Admin definition """
 
+    inlines = (PhotoInline, )   # RoomAdmin 안에 PhotoAdmin을 넣기 위한 코드
+
     fieldsets = (  # filed 부제목 추가 및 재정렬
         (
             "Basic Info",
-            {"fields": ("name", "description", "country", "address", "price")},
+            {"fields": ("name", "description", "country", "city", "address", "price")},
         ),
         ("Times", {"fields": ("check_in", "check_out", "instant_book")}),
         (
@@ -66,6 +73,7 @@ class RoomAdmin(admin.ModelAdmin):
         "instant_book",
         "count_amenities",
         "count_photos",
+        "total_rating",
     )
 
     list_filter = (  # 필터기능 추가
@@ -78,6 +86,8 @@ class RoomAdmin(admin.ModelAdmin):
         "city",
         "country",
     )
+
+    raw_id_fields = ("host", )
 
     search_fields = ["city", "^host__username"]  # 해당 filed에 관련된 검색가능
 
@@ -99,4 +109,9 @@ class PhotoAdmin(admin.ModelAdmin):
 
     """ Photo Admin definition """
 
-    pass
+    list_display = ("__str__", "get_thumbnail")
+
+    def get_thumbnail(self, obj):
+        return mark_safe(f'<img width="100px" src="{obj.file.url}"/>')
+
+    get_thumbnail.short_description = "Thumbnail"
