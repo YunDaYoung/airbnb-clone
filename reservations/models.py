@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from datetime import datetime, timedelta
 from core import models as core_models
 
 
@@ -34,8 +35,9 @@ class Reservation(core_models.TimeStempModel):
         return f"{self.room} - {self.check_in}"
 
     def in_progress(self):
-        now = timezone.now().date()
-        return now > self.check_in and now < self.check_out
+        now = datetime.now().date()
+        print(now)
+        return now >= self.check_in and now <= self.check_out
 
     in_progress.boolean = True
 

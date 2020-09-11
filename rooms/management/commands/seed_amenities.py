@@ -1,9 +1,10 @@
 from django.core.management.base import BaseCommand
 from rooms.models import Amenity
 
+
 class Command(BaseCommand):
 
-    help = "This command tells me that he love me"
+    help = "This command creates amenities"
 
     # def add_arguments(self, parser):
     #     parser.add_argument("--times", help="How many times do you want me to tell you that I love you", )
@@ -15,7 +16,6 @@ class Command(BaseCommand):
             "세탁기",
             "Wi-Fi",
             "실내 벽난로",
-            "철",
             "노트북 작업 공간",
             "침대",
             "셀프 체크인",

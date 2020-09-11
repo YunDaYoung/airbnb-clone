@@ -13,8 +13,9 @@ class ItemAdmin(admin.ModelAdmin):
     def used_by(self, obj):
         return obj.rooms.count()
 
+
 # RoomAdmin 안에 PhotoAdmin을 넣기 위한 코드
-class PhotoInline(admin.StackedInline):
+class PhotoInline(admin.TabularInline):
     model = models.Photo
 
 
@@ -23,12 +24,22 @@ class RoomAdmin(admin.ModelAdmin):
 
     """ Room Admin definition """
 
-    inlines = (PhotoInline, )   # RoomAdmin 안에 PhotoAdmin을 넣기 위한 코드
+    inlines = (PhotoInline,)  # RoomAdmin 안에 PhotoAdmin을 넣기 위한 코드
 
     fieldsets = (  # filed 부제목 추가 및 재정렬
         (
             "Basic Info",
-            {"fields": ("name", "description", "country", "city", "address", "price")},
+            {
+                "fields": (
+                    "name",
+                    "description",
+                    "country",
+                    "city",
+                    "address",
+                    "price",
+                    "room_type",
+                )
+            },
         ),
         ("Times", {"fields": ("check_in", "check_out", "instant_book")}),
         (
@@ -87,7 +98,7 @@ class RoomAdmin(admin.ModelAdmin):
         "country",
     )
 
-    raw_id_fields = ("host", )
+    raw_id_fields = ("host",)
 
     search_fields = ["city", "^host__username"]  # 해당 filed에 관련된 검색가능
 
@@ -102,6 +113,8 @@ class RoomAdmin(admin.ModelAdmin):
 
     def count_photos(self, obj):
         return obj.photos.count()
+
+    count_photos.short_description = "Photo Count"
 
 
 @admin.register(models.Photo)
