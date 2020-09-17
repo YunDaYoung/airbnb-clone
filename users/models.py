@@ -38,7 +38,11 @@ class User(AbstractUser):  # models.Model을 상속
     bio = models.TextField(blank=True)
     birthdate = models.DateField(blank=True, null=True)
 
-    language = models.CharField(choices=LENGUAGE_CHOICES, max_length=2, blank=True)
-    currency = models.CharField(choices=CURRENCY_CHOICES, max_length=3, blank=True)
+    language = models.CharField(
+        choices=LENGUAGE_CHOICES, max_length=2, blank=True, default=LENGUAGE_KOREAN
+    )
+    currency = models.CharField(
+        choices=CURRENCY_CHOICES, max_length=3, blank=True, default=CURRENCY_KRW
+    )
 
     superhost = models.BooleanField(default=False)
